@@ -1,0 +1,87 @@
+# Enterprise Security Assessment - Executive Findings Summary
+
+## Executive Summary
+
+This security assessment of the DASWebs Inc. network identified **critical vulnerabilities** that pose immediate risk to organizational operations, including the EternalBlue exploit (CVE-2017-0143) on the Domain Controller, ineffective firewall segmentation allowing unrestricted lateral movement, and multiple end-of-life systems lacking security patches. The assessment revealed **12 high-priority risks** across network segmentation, endpoint security, and administrative access controls. Without immediate remediation, these vulnerabilities create multiple attack paths that could lead to complete domain compromise, data exfiltration, and operational disruption.
+
+---
+
+## Assessment Scope
+
+- **Network Segments:** Production (172.16.10.0/24), Development (172.16.20.0/24), Internal (172.16.30.0/24)
+- **Hosts Assessed:** 12 systems including Domain Controller, Database, Web Servers, Fileshare, and Firewall
+- **Assessment Duration:** 21 hours over 2 days (May 6-7, 2026)
+- **Methodology:** NIST SP 800-30 Risk Assessment, NIST SP 800-53 Compliance Mapping
+
+---
+
+## Top 5 Critical Findings
+
+### 1. EternalBlue (CVE-2017-0143) on Domain Controller
+**Risk Score: 25/25 (Very High)**
+
+- **Affected System:** Domain Controller (172.16.30.5) - Windows Server 2012 R2
+- **Impact:** Remote code execution with SYSTEM privileges, enabling complete domain compromise
+- **Attack Vector:** SMBv1 vulnerability allowing unauthenticated remote exploitation
+- **Remediation:** Immediate patching (MS17-010), disable SMBv1, implement network segmentation
+
+---
+
+### 2. Firewall Not Enforcing Effective Inter-Subnet Access Controls
+**Risk Score: 25/25 (Very High)**
+
+- **Affected System:** pfSense Firewall (172.16.10.2, 172.16.20.2, 172.16.30.2)
+- **Impact:** Unrestricted lateral movement between all subnets, enabling rapid compromise escalation
+- **Finding:** Firewall rules allow "any-to-any" traffic between Production, Development, and Internal subnets
+- **Remediation:** Implement least-privilege firewall rules, create DMZ, restrict administrative access to jump host
+
+---
+
+### 3. SambaCry (CVE-2017-7494) on Fileshare
+**Risk Score: 20/25 (Very High)**
+
+- **Affected System:** Fileshare (172.16.30.32) - OpenMediaVault 7.1.1
+- **Impact:** Remote code execution via malicious SMB share uploads
+- **Remediation:** Patch Samba to version 4.6.4+, disable unnecessary SMB/NFS services
+
+---
+
+### 4. Exposed Administrative Services Without Jump Host Controls
+**Risk Score: 20/25 (Very High)**
+
+- **Affected Systems:** Fileshare (JMX Console - no authentication), Domain Controller (RDP/WinRM), Database (RDP/WinRM)
+- **Impact:** Direct administrative access from any subnet without centralized access controls
+- **Remediation:** Deploy jump host (bastion), restrict RDP/SSH/WinRM to management subnet only
+
+---
+
+### 5. End-of-Life Operating Systems
+**Risk Score: 20/25 (Very High)**
+
+- **Affected Systems:** 5 hosts + Firewall
+  - Domain Controller: Windows Server 2012 R2 (EOL: October 2023)
+  - Database: Windows Server 2012 R2 (EOL: October 2023)
+  - Backup: Debian GNU/Linux 9 (EOL: June 2022)
+  - Firewall: pfSense 2.5.0 (EOL: May 2023)
+- **Impact:** No security patches available, known exploits publicly available
+- **Remediation:** Upgrade to supported OS versions (Windows Server 2022, Debian 12, pfSense 2.7+)
+
+---
+
+## Additional High-Risk Findings
+
+| Finding | Affected Systems | Risk Score | Priority |
+|---------|------------------|------------|----------|
+| No SIEM, IDS/IPS, or EDR Deployed | Entire network | 12/25 (High) | High |
+| Outdated Apache httpd | Backup, Dev-Web, Prod-Web, Mail | 12/25 (High) | High |
+| Outdated OpenSSH Services | Domain Controller, Database, Workstation-Desk | 12/25 (High) | High |
+| Cleartext Protocols (Telnet, FTP, HTTP) | Mail, Backup, Domain Controller, +5 others | 12/25 (High) | High |
+| Inadequate Network Segmentation | Internal Subnet | 12/25 (High) | High |
+
+---
+
+## Attack Path Analysis
+
+The identified vulnerabilities create multiple plausible attack paths:
+
+### **Path A: Direct Domain Compromise**
