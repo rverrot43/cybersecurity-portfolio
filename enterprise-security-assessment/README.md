@@ -196,10 +196,10 @@ Designed a comprehensive remediated network architecture implementing defense-in
 
 ## Project Artifacts
 
-- **[Full Security Assessment Report (PDF)](./reports/security-assessment-report.pdf)** - Complete vulnerability assessment with findings, risk analysis, and remediation recommendations
+- **[Full Security Assessment Report (PDF)](./reports/security-assessment-report-sanitized.pdf)** - Complete vulnerability assessment with findings, risk analysis, and remediation recommendations
 - **[Recommended Network Architecture Diagram](./diagrams/recommended-network-architecture.png)** - Visual representation of remediated architecture with DMZ, Management Network, and security controls
-- **[Linux Security Audit Script](./scripts/linux_security_script.sh)** - Custom Bash script for automated security data collection on Linux systems
-- **[Windows Security Audit Script](./scripts/windows_security_script.ps1)** - Custom PowerShell script for automated security data collection on Windows systems
+- **[Linux Security Audit Script](./scripts/linux-security-script.sh)** - Custom Bash script for automated security data collection on Linux systems
+- **[Windows Security Audit Script](./scripts/windows-security-script.ps1)** - Custom PowerShell script for automated security data collection on Windows systems
 - **[Findings Summary (Markdown)](./findings/findings-summary.md)** - Executive summary of key findings and recommendations
 
 ---
