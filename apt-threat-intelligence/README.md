@@ -287,13 +287,18 @@ Techniques were classified using prevalence-based scoring:
 
 ## Project Artifacts
 
-- **[Full APT Threat Analysis Report (PDF)](./reports/apt-threat-analysis_full-report.pdf)** - Comprehensive analysis of all three APT groups with detailed TTP mapping
-- **[Executive Summary (PDF)](./reports/apt-threat-analysis_executive-summary.pdf)** - High-level overview for executive leadership and non-technical stakeholders
-- **[MITRE ATT&CK Navigator Layer (JSON)](./mitre-attack/consolidated-navigator-layer.json)** - Import into [MITRE ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/) to visualize consolidated threat landscape
-- **[Consolidated Techniques Spreadsheet (XLSX)](./mitre-attack/consolidated-navigator-layer.xlsx)** - Excel-compatible view of all techniques with risk categorization
-- **[POA&M Summary (Markdown)](./findings/poam-summary.md)** - Prioritized mitigation roadmap with implementation timelines
+### **APT Threat Intelligence Analysis (Part One)**
+- **[Full APT Threat Analysis Report (PDF)](./reports/apt-threat-analysis_full-report.pdf)** - Comprehensive analysis of APT29, Volt Typhoon, and APT33 with detailed TTP mapping
+- **[APT Analysis Executive Summary (PDF)](./reports/apt-threat-analysis_executive-summary.pdf)** - High-level overview of threat landscape and risk categorization
 
----
+### **Plan of Action & Milestones (Part Two)**
+- **[POA&M Executive Summary (PDF)](./reports/poam_executive-summary.pdf)** - High-level overview of prioritization methodology and implementation strategy
+- **[POA&M Spreadsheet (XLSX)](./reports/poam_spreadsheet.xlsx)** - Excel-compatible POA&M for analysis and tracking
+- **[POA&M Summary (Markdown)](./findings/poam-summary.md)** - Quick-view summary with top priorities and timelines
+
+### **MITRE ATT&CK Mapping**
+- **[MITRE ATT&CK Navigator Layer (JSON)](./mitre-attack/consolidated-navigator-layers.json)** - Import into [MITRE ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/)
+- **[Consolidated Techniques Spreadsheet (XLSX)](./mitre-attack/consolidated-navigator-layers.xlsx)** - Excel-compatible view of all techniques
 
 ## How to Use the MITRE ATT&CK Navigator Layer
 
