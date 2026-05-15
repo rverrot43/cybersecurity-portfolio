@@ -1,0 +1,456 @@
+# Plan of Action & Milestones (POA&M) Summary
+
+## Executive Overview
+
+This Plan of Action and Milestones (POA&M) document identifies 10 high-priority security control remediation items designed to address vulnerabilities exploited by nation-state Advanced Persistent Threat (APT) groups targeting U.S. defense and critical infrastructure sectors. All identified weaknesses are directly mapped to MITRE ATT&CK techniques used by **APT29 (Russia)**, **Volt Typhoon (China)**, and **APT33 (Iran)**.
+
+**Project Metadata:**
+- **Name:** Ryan Verrot
+- **System:** Course Project: Part Two
+- **Impact Level:** High
+- **POA&M Date:** May 3, 2026
+- **Total Open Items:** 10
+- **Risk Rating:** All High Priority
+
+---
+
+## Prioritization Methodology
+
+### **Risk-Based Control Selection**
+
+Controls were prioritized based on:
+
+1. **Technique Prevalence:** How many APT groups exploit each technique
+2. **Attack Path Criticality:** Position in the attack lifecycle (Initial Access → Privilege Escalation → Lateral Movement → Exfiltration)
+3. **Implementation Feasibility:** Time and resource requirements for remediation
+4. **Organizational Impact:** Business process disruption vs. security benefit
+
+### **MITRE ATT&CK Mapping**
+
+All 10 controls are mapped to the five **High-Risk techniques** (used by all 3 APT groups):
+
+| MITRE ATT&CK Technique | Technique ID | APT Groups | Controls Addressing |
+|------------------------|--------------|-----------|-------------------|
+| **Valid Accounts** | T1078 | All 3 | AC-06, IA-02, AC-02 |
+| **Command and Scripting Interpreter** | T1059 | All 3 | CM-07, SI-04, AC-06, CM-06, SI-03 |
+| **Exploit Public-Facing Application** | T1190 | All 3 | CM-07, SI-04, CM-06, SC-07, RA-05 |
+| **File and Directory Discovery** | T1083 | All 3 | CM-07, AC-06, AC-02 |
+| **Ingress Tool Transfer** | T1105 | All 3 | CM-07, CM-06, SC-07, SI-03 |
+
+---
+
+## Top 10 Control Remediation Items
+
+### **Priority 1: IA-02 - Identification and Authentication (Organizational Users)**
+
+**NIST 800-53 Control Description:**
+> Uniquely identify and authenticate organizational users and enforce stronger access assurance mechanisms such as multi-factor authentication.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1078 - Valid Accounts
+- T1059 - Command and Scripting Interpreter
+- T1083 - File and Directory Discovery
+
+**Why This Matters:**
+- **APT29 Usage:** Golden SAML token forgery, MFA bypass techniques
+- **APT33 Usage:** Large-scale password spraying against Microsoft 365/Azure AD
+- **Impact:** Compromised credentials enable persistence and lateral movement without triggering alerts
+
+**Remediation Plan:**
+1. Deploy FIDO2 hardware security keys (phishing-resistant MFA) for all privileged users
+2. Enforce Azure AD Conditional Access policies with device compliance requirements
+3. Implement passwordless authentication (Windows Hello for Business) on all workstations
+4. Monitor for Golden SAML token forgery attempts in cloud logs
+
+**Implementation Timeline:** 0-30 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 2: AC-06 - Least Privilege**
+
+**NIST 800-53 Control Description:**
+> Employ the principle of least privilege, allowing only authorized access necessary to accomplish assigned tasks and limiting abuse of compromised accounts.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1078 - Valid Accounts
+- T1059 - Command and Scripting Interpreter
+- T1083 - File and Directory Discovery
+
+**Why This Matters:**
+- **All APT Groups:** Use compromised credentials to escalate privileges and access high-value targets
+- **Volt Typhoon Usage:** Living off the Land attacks maximize impact of compromised admin accounts
+- **Impact:** Limits lateral movement range and data exfiltration scope after compromise
+
+**Remediation Plan:**
+1. Implement Just-In-Time (JIT) privilege escalation for administrative access
+2. Deploy Privileged Access Management (PAM) solution for credential vaulting
+3. Enforce role-based access control (RBAC) across all systems and applications
+4. Audit and remove unnecessary administrative group memberships
+
+**Implementation Timeline:** 30-60 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 3: CM-07 - Least Functionality**
+
+**NIST 800-53 Control Description:**
+> Configure the system to provide only essential capabilities, services, ports, protocols, software, and functions required for mission operations.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1059 - Command and Scripting Interpreter
+- T1190 - Exploit Public-Facing Application
+- T1078 - Valid Accounts
+- T1083 - File and Directory Discovery
+- T1105 - Ingress Tool Transfer
+
+**Why This Matters:**
+- **APT29, Volt Typhoon, APT33:** Exploit unnecessary services, ports, and protocols to establish initial access
+- **Attack Path:** Disabled services = fewer attack vectors available to adversaries
+- **Impact:** Significantly reduces attack surface while improving system performance
+
+**Remediation Plan:**
+1. Inventory all running services across systems and identify mission-critical requirements
+2. Disable unnecessary services, ports, and protocols (e.g., SMBv1, RDP on non-critical systems)
+3. Configure Windows Group Policy to restrict service startup and access
+4. Implement application whitelisting to prevent unauthorized software execution
+5. Document and maintain approved port/protocol baseline
+
+**Implementation Timeline:** 0-60 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 4: SI-04 - System Monitoring**
+
+**NIST 800-53 Control Description:**
+> Monitor the system to detect attacks and indicators of potential attacks; unauthorized local, network, and remote connections; unauthorized use of systems.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1059 - Command and Scripting Interpreter
+- T1190 - Exploit Public-Facing Application
+- T1078 - Valid Accounts
+- T1083 - File and Directory Discovery
+- T1105 - Ingress Tool Transfer
+
+**Why This Matters:**
+- **Detection Strategy:** APT groups rely on remaining undetected for extended periods
+- **Volt Typhoon Insight:** Maintains presence for months undetected through Living off the Land techniques
+- **Impact:** Reduces dwell time from months to hours/days, limiting impact
+
+**Remediation Plan:**
+1. Deploy Endpoint Detection and Response (EDR) solution to all endpoints
+2. Implement Security Information and Event Management (SIEM) for centralized log aggregation
+3. Configure behavioral detection rules for suspicious PowerShell, command-line, and script execution
+4. Enable PowerShell Script Block Logging and Constrained Language Mode
+5. Establish 24/7 Security Operations Center (SOC) monitoring with incident response procedures
+
+**Implementation Timeline:** 0-90 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 5: CA-07 - Continuous Monitoring**
+
+**NIST 800-53 Control Description:**
+> Develop and implement a continuous monitoring strategy to maintain ongoing awareness of control effectiveness, vulnerabilities, and threat activity.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1059 - Command and Scripting Interpreter
+- T1190 - Exploit Public-Facing Application
+- T1078 - Valid Accounts
+- T1083 - File and Directory Discovery
+- T1105 - Ingress Tool Transfer
+
+**Why This Matters:**
+- **Persistent Threats:** APT groups continuously evolve TTPs; static controls become ineffective
+- **Compliance Requirement:** NIST RMF and FedRAMP require continuous monitoring authorizations
+- **Impact:** Ensures controls remain effective against evolving threat landscape
+
+**Remediation Plan:**
+1. Establish continuous monitoring baseline for security metrics and KPIs
+2. Implement automated vulnerability scanning (weekly) using industry-standard tools (Nessus, Qualys)
+3. Deploy configuration compliance monitoring (e.g., SCM, SCAP) across all systems
+4. Establish threat intelligence integration to detect emerging APT techniques
+5. Conduct quarterly risk assessments and annual system security plans update
+
+**Implementation Timeline:** 30-90 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 6: AC-02 - Account Management**
+
+**NIST 800-53 Control Description:**
+> Manage information system accounts, including establishing, activating, modifying, reviewing, disabling, and removing accounts.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1078 - Valid Accounts
+- T1083 - File and Directory Discovery
+
+**Why This Matters:**
+- **APT33 Targeting:** Password spraying relies on valid account enumeration and weak password policies
+- **Compromise Prevention:** Strong account lifecycle management prevents dormant account misuse
+- **Impact:** Reduces valid credentials available to attackers; detects unusual account activity
+
+**Remediation Plan:**
+1. Implement strict account creation and deprovisioning procedures
+2. Enforce 90-day password expiration with history controls (prevent reuse of last 24 passwords)
+3. Require 14-character minimum passwords with complexity requirements
+4. Implement account lockout policy: 5 failed attempts = 15-minute lockout
+5. Conduct quarterly account access reviews and disable dormant accounts (90+ days inactive)
+6. Implement multi-factor authentication for all account management operations
+
+**Implementation Timeline:** 30-60 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 7: CM-06 - Configuration Settings**
+
+**NIST 800-53 Control Description:**
+> Establish, document, implement, and monitor secure configuration settings for information technology products employed within the system.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1059 - Command and Scripting Interpreter
+- T1190 - Exploit Public-Facing Application
+- T1105 - Ingress Tool Transfer
+- T1083 - File and Directory Discovery
+
+**Why This Matters:**
+- **Default Configurations:** Vulnerable to exploitation due to unnecessary features and weak defaults
+- **Volt Typhoon Success:** Exploited default/weak configurations in critical infrastructure systems
+- **Impact:** Eliminates entire classes of vulnerabilities through hardening baselines
+
+**Remediation Plan:**
+1. Develop and document security configuration baselines (Windows, Linux, network devices, web applications)
+2. Use CIS Benchmarks and NIST guidelines as baseline standards
+3. Implement Security Configuration Management (SCM) tools for automated compliance checking
+4. Deploy Group Policy Objects (GPOs) to enforce baselines across Windows environments
+5. Conduct configuration audits monthly and document deviations with exceptions
+6. Maintain configuration control board for change management
+
+**Implementation Timeline:** 30-90 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 8: SC-07 - Boundary Protection**
+
+**NIST 800-53 Control Description:**
+> Monitor and control communications at external and internal system boundaries to prevent unauthorized access and data transfer.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1190 - Exploit Public-Facing Application
+- T1105 - Ingress Tool Transfer
+- T1078 - Valid Accounts
+
+**Why This Matters:**
+- **APT Entry Points:** Public-facing applications and external network boundaries are primary attack vectors
+- **Data Exfiltration Prevention:** Egress filtering detects unauthorized data transfer
+- **Impact:** Prevents initial compromise and limits lateral movement to internal networks
+
+**Remediation Plan:**
+1. Deploy next-generation firewall (NGFW) with application-layer inspection
+2. Implement Web Application Firewall (WAF) for all external-facing web applications
+3. Configure egress filtering to whitelist approved destinations and block unauthorized outbound connections
+4. Deploy Intrusion Prevention System (IPS) for network-based threat detection
+5. Implement network segmentation (DMZ, internal network zones) with strict boundary controls
+6. Monitor and log all boundary crossings (ingress/egress) for forensic analysis
+
+**Implementation Timeline:** 60-90 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 9: RA-05 - Vulnerability Monitoring and Scanning**
+
+**NIST 800-53 Control Description:**
+> Scan for vulnerabilities in the system and hosted applications and remediate identified weaknesses before exploitation occurs.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1190 - Exploit Public-Facing Application
+
+**Why This Matters:**
+- **Exploitation Timeline:** Known vulnerabilities are exploited within days to weeks of disclosure
+- **APT Speed:** Volt Typhoon and APT33 rapidly exploit known vulnerabilities to establish footholds
+- **Impact:** Proactive remediation eliminates low-hanging fruit attack vectors
+
+**Remediation Plan:**
+1. Implement automated vulnerability scanning (Nessus, Qualys, Rapid7) on weekly schedule
+2. Establish vulnerability management process with risk-based prioritization matrix
+3. Define remediation timelines: Critical (24-48 hours), High (7 days), Medium (30 days), Low (90 days)
+4. Deploy patch management solution with automated patch deployment where possible
+5. Conduct quarterly penetration testing of external-facing applications
+6. Maintain vulnerability metrics dashboard for executive visibility
+
+**Implementation Timeline:** 0-30 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+### **Priority 10: SI-03 - Malicious Code Protection**
+
+**NIST 800-53 Control Description:**
+> Implement malicious code protection mechanisms at system entry and exit points and on endpoints to detect and eradicate malicious code.
+
+**Mitigates MITRE ATT&CK Techniques:**
+- T1059 - Command and Scripting Interpreter
+- T1105 - Ingress Tool Transfer
+
+**Why This Matters:**
+- **Defense Evasion:** APT groups use obfuscated scripts and encoded payloads to bypass antivirus
+- **APT29 Sophistication:** Custom tools specifically designed to evade signature-based detection
+- **Impact:** Multiple defense layers increase detection probability despite evasion techniques
+
+**Remediation Plan:**
+1. Deploy advanced endpoint protection (EPP) with behavioral analysis capabilities (not just signatures)
+2. Implement email gateway antimalware filtering for attachment scanning
+3. Deploy web gateway antimalware filtering for drive-by download prevention
+4. Enable application whitelisting to prevent unauthorized code execution
+5. Deploy EDR with file detonation sandbox for zero-day detection
+6. Conduct quarterly malware training for end users on phishing and suspicious downloads
+
+**Implementation Timeline:** 30-60 days  
+**Resource Requirements:** To Be Completed by Supervisor  
+**Risk Rating:** High  
+**Status Date:** May 3, 2026
+
+---
+
+## Implementation Timeline & Milestones
+
+### **Phase 1: Immediate Actions (0-30 Days)**
+- ✅ **IA-02:** Deploy FIDO2 MFA for privileged users
+- ✅ **CM-07:** Inventory services and disable unnecessary protocols
+- ✅ **RA-05:** Activate vulnerability scanning
+
+**Success Criteria:** 100% of privileged accounts protected with MFA; vulnerability baseline established
+
+### **Phase 2: Foundation (30-60 Days)**
+- ✅ **AC-02:** Implement account management policy
+- ✅ **SI-03:** Deploy endpoint antimalware and EDR
+- ✅ **AC-06:** Deploy Just-In-Time privilege escalation
+
+**Success Criteria:** Account lifecycle automated; all endpoints protected; privilege escalation system operational
+
+### **Phase 3: Operations (60-90 Days)**
+- ✅ **SI-04:** 24/7 SOC monitoring activated
+- ✅ **CM-06:** Configuration baselines deployed
+- ✅ **CA-07:** Continuous monitoring program established
+- ✅ **SC-07:** Network boundary protection deployed
+
+**Success Criteria:** Monitoring operational; incident response procedures tested; compliance baseline met
+
+---
+
+## Success Metrics & KPIs
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| **MFA Coverage** | 100% of privileged users | Monthly AD/Cloud audit |
+| **Patching Compliance** | 95% within SLA | Automated patch management dashboard |
+| **Vulnerability Remediation** | 100% of Critical within 48 hours | Vulnerability management system |
+| **EDR Detection** | <5 minute detection time for anomalies | SOC monitoring logs |
+| **Account Review** | 100% quarterly | Identity & Access Management system |
+| **Incident Response** | <1 hour to initial response | Incident tracking system |
+| **Malware Detection** | 99% of known malware | Endpoint protection telemetry |
+| **Configuration Drift** | <5% | Configuration management system |
+
+---
+
+## Key Findings from Threat Analysis
+
+### **Why These Controls Matter**
+
+**APT29 (Russia) - SolarWinds Supply Chain Attack:**
+- **Attack Path:** Exploit Public-Facing Application (T1190) → Ingress Tool Transfer (T1105) → Command Execution (T1059) → Privilege Escalation → Persistent Backdoor
+- **Addressed By:** CM-07, SI-04, CA-07, SC-07, RA-05
+
+**Volt Typhoon (China) - Critical Infrastructure Targeting:**
+- **Attack Path:** Exploit Public-Facing Application (T1190) → Valid Accounts (T1078) → Living off the Land (T1059) → Lateral Movement → Pre-positioning for Disruption
+- **Addressed By:** SC-07, IA-02, AC-06, SI-04, CM-06
+
+**APT33 (Iran) - Aerospace & Defense Targeting:**
+- **Attack Path:** Phishing → Password Spraying (T1110 → T1078) → Valid Accounts Compromise → File Discovery (T1083) → Data Exfiltration
+- **Addressed By:** IA-02, AC-02, AC-06, CM-07, SI-04
+
+---
+
+## Resource Requirements & Vendor Dependencies
+
+**Resource Needs (To Be Completed by Supervisor):**
+- Personnel: SOC analysts (24/7 coverage), system administrators, security architects
+- Technology: EDR solution, SIEM platform, PAM system, NGFW/WAF, vulnerability scanner, patch management
+- Budget: Enterprise security tool licensing and annual support
+- Expertise: MITRE ATT&CK framework implementation, NIST 800-53 compliance
+
+**Vendor Dependencies:** None identified for initial deployment  
+**Vendor Check-in Date:** N/A (Initial POAM)
+
+---
+
+## References & Alignment
+
+### **Frameworks & Standards**
+- NIST SP 800-53 Rev. 5 (Revision 5 Controls)
+- NIST Cybersecurity Framework (CSF)
+- MITRE ATT&CK for Enterprise v16.1
+- CIS Critical Security Controls (CSC)
+- FedRAMP Security Requirements
+
+### **Threat Intelligence Sources**
+- CISA Cybersecurity Advisories (AA21-116A, AA23-144A)
+- Microsoft Threat Intelligence Reports
+- Mandiant Threat Intelligence
+- DOJ/FBI Public Statements on APT Targeting
+
+### **Relevant Documents**
+- **Full POA&M Report:** See [poam-full-report.pdf](../reports/poam-full-report.pdf)
+- **POA&M Spreadsheet:** See [poam-spreadsheet.xlsx](../reports/poam-spreadsheet.xlsx)
+- **APT Threat Analysis:** See [apt-threat-analysis-full-report.pdf](../reports/apt-threat-analysis-full-report.pdf)
+- **APT Executive Summary:** See [apt-threat-analysis-executive-summary.pdf](../reports/apt-threat-analysis-executive-summary.pdf)
+
+---
+
+## Quick Links
+
+- **[MITRE ATT&CK Navigator - Consolidated Layer](../mitre-attack/consolidated-navigator-layer.json)** - Visualize all APT techniques and how controls address them
+- **[NIST 800-53 Control Catalog](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)** - Full control descriptions and implementation guidance
+- **[CISA Cybersecurity Advisories](https://www.cisa.gov/news-events/cybersecurity-advisories)** - Threat intelligence and incident updates
+
+---
+
+## Project Information
+
+**Course:** CNG 2057 - Network Defense and Countermeasures  
+**Institution:** Pikes Peak State College  
+**Completion Date:** May 2026  
+**Author:** Ryan Verrot  
+
+This POA&M is designed to address high-risk vulnerabilities identified in the APT threat intelligence analysis (Part One) and provide a prioritized, actionable remediation roadmap for defensive implementation.
+
+---
+
+*Last Updated: May 3, 2026*  
+*Classification: Course Assignment*  
+*All analysis based on publicly available threat intelligence and NIST cybersecurity standards*
