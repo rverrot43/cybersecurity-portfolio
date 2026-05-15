@@ -121,7 +121,7 @@ Architected and deployed production-ready, highly-available cloud infrastructure
 
 📧 **Email:** ryan.verrot@protonmail.com  
 📍 **Location:** Colorado Springs, CO  
-💼 **LinkedIn:** [Your LinkedIn Profile]  
+💼 **LinkedIn:** www.linkedin.com/in/ryan-verrot-b21b1a6a 
 📄 **Resume:** [Link to your resume PDF when hosted]
 
 ---
