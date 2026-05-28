@@ -22,7 +22,7 @@ Microsoft Azure (Security Center, App Service, Monitor, Virtual Networks), AWS (
 Windows Server (2012 R2, 2016, 2019), Linux (Kali, Ubuntu, AlmaLinux, Debian), pfSense, Windows 10/11
 
 **Scripting & Automation:**  
-PowerShell, Bash, Python, Azure CLI, Terraform
+PowerShell, Bash, Azure CLI
 
 **Security Frameworks & Compliance:**  
 MITRE ATT&CK, MITRE D3FEND, NIST SP 800-53, NIST SP 800-30, PCI-DSS, vulnerability management
